@@ -54,12 +54,30 @@ app.get("/posts/:id", (req, res) => {
 });
 
 // POST (CREATE)
-app.post( '/posts', function( req, res )
-				   {
-				   	
-				   } 
+app.post("/posts", (req, res) => {
+  const requiredFields = ["title", "content", "author"];
+  for (let i = 0; i < requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`;
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
 
-);
+  Blog.create({
+    title: req.body.title,
+    content: req.body.content,
+    
+    // **********How do we parse both the author's firstName & lastName???*********
+    author: req.body.author    
+  })
+    .then(blog => res.status(201).json(blog.serialize()))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    });
+});
 
 // PUT (UPDATE)
 app.put( '/posts/:id', function( req, res )
