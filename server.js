@@ -115,9 +115,9 @@ app.put("/posts/:id", (req, res) => {
 });
 
 // DELETE
-app.delete( '/posts/:id', function( req, res )
-				   {
-				   	
-				   } 
-
-);
+app.delete("/posts/:id", (req, res) => {
+  Blog.findByIdAndRemove(req.params.id)
+    // ************Followed example, but why is parameter needed here???? Same as above in PUT...***********
+    .then(blog => res.status(204).end())
+    .catch(err => res.status(500).json({ message: "Internal server error" }));
+});
