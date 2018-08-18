@@ -123,6 +123,7 @@ app.delete("/posts/:id", (req, res) => {
 });
 
 // catch-all endpoint if client makes request to non-existent endpoint
+// This should come after all legitimate endpoints
 app.use("*", function(req, res) {
   res.status(404).json({ message: "Not Found" });
 });

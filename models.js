@@ -31,3 +31,6 @@ blogSchema.methods.serialize = function() {
 
 // Blog model based on blogSchema
 const Blog = mongoose.model( 'Blog', blogSchema );
+
+// Export the model
+module.exports = { Blog };
