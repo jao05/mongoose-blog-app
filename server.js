@@ -24,7 +24,7 @@ app.use(express.json());
 // serialize objects that are to be returned to API user
 app.get( '/posts', function( req, res ) {
 
-		Blog.find()    
+		    Blog.find()    
 		    // success callback: for each blog we got back, we'll
 		    // call the `.serialize` instance method we've created in
 		    // models.js in order to only expose the data we want the API return.    

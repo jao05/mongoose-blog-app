@@ -1,15 +1,41 @@
 // Import Mongoose
 const mongoose = require( 'mongoose' );
 
+// Use ES6 promises in Mongoose
+mongoose.Promise = global.Promise;
+
+// Author schema
+const authorSchema = mongoose.Schema({
+  firstName: String;
+  lastName: String,
+  userName: {
+    type: String,
+    unigue: true
+  }
+});
+
+// Comment schema
+const commentSchema = mongoose.Schema({ content: 'string'});
+
 // Blog schema
 const blogSchema = mongoose.Schema({
 
   title: String,
   content: String,
-  author: {
-    firstName: String,
-    lastName: String
-  }
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
+  comments: [ commentSchema ]
+});
+
+// Pre-hook to populate author property prior to returning documents for a 'find' query
+blogPostSchema.pre('find', function(next) {
+  this.populate('author');
+  next();
+});
+
+// Pre-hook to populate author property prior to returning documents for a 'findOne' query
+blogPostSchema.pre('findOne', function(next) {
+  this.populate('author');
+  next();
 });
 
 // Create a virtual property for the author's full name
@@ -25,12 +51,17 @@ blogSchema.methods.serialize = function() {
   return {
     title: this.title,
     content: this.content,
-    author: this.authorFullName
+    author: this.authorFullName,
+    comments: this.comments,
+    id: this._id
   };
 }; 
 
-// Blog model based on blogSchema
-const Blog = mongoose.model( 'Blog', blogSchema );
+// Author model based on authorSchema
+const Author = mongoose.model( 'Authors', authorSchema );
 
-// Export the model
-module.exports = { Blog };
+// Blog model based on blogSchema
+const Blog = mongoose.model( 'Blogposts', blogSchema );
+
+// Export the model(s)
+module.exports = { Author, Blog };
